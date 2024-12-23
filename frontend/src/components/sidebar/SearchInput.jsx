@@ -8,3 +8,4 @@ const SearchInput = () => {
 		</form>
 	);
 };
+export default SearchInput;
