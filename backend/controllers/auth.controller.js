@@ -49,10 +49,31 @@ export const signup = async (req, res) => {
   }
 }
 
-export const login = (req, res) => {
+export const login = async (req, res) => {
+  try {
+    const { username, password } = req.body;
+    const user = await User.findOne({username});
+    const isPasswordCorrect = await bcrypt.compare(password, user?.Password || "");
 
+    if (!user || !passwordIsCorrect){
+      res.status(400).json({error: "invalid username or password"});
+    }
+
+    generateTokenAndSetCookie(user._id, res);
+
+    res.status(200).json({
+      _id: newUser._id,
+      fullName: newUser.fullName,
+      username: newUser.username,
+      profilePic: newUser.profilePic,
+    });
+  }
+  catch (error){
+    console.log("Error in login controller", error.message);
+    res.status(500).json({error: "internal Server error"});
+  }
 }
 
-export const logout = (req, res) => {
+export const logout = async (req, res) => {
 
 }
