@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 import SideBar from '../../components/sidebar/SideBar';
 import MessageContainer from '../../components/messages/MessageContainer';
 
