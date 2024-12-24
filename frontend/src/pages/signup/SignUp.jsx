@@ -12,6 +12,10 @@ const SignUp = () => {
 		gender: "",
 	});
 
+	const handleCheckboxChange = (gender) => {
+		setInputs({ ...inputs, gender });
+	};
+
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 		console.log(inputs)
@@ -77,7 +81,7 @@ const SignUp = () => {
 						/>
 					</div>
 
-					<GenderCheckbox />
+					<GenderCheckbox onCheckboxChange={handleCheckboxChange} selectedGender={inputs.gender} />
 
           <Link to='/login' className='text-sm hover:underline hover:text-blue-600 inline-block' href='#'>
    						Already have an account?
