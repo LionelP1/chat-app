@@ -40,6 +40,6 @@ function handleInputErrors(username, password) {
 		toast.error("Please fill in all fields");
 		return false;
 	}
-
+  
 	return true;
 }
