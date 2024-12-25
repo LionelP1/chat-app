@@ -6,7 +6,6 @@ import Message from "./Message";
 const Messages = () => {
 	const { messages, loading } = useGetMessages();
 	const lastMessageRef = useRef();
-	console.log(messages);
 
 	useEffect(() => {
 		setTimeout(() => {
