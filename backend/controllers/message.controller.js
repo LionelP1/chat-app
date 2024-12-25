@@ -29,7 +29,9 @@ export const sendMessage = async (req, res) => {
 
     //SOCKET
 
-    Promise.all([conversation.save(), newMessage.save()]);
+    await newMessage.save();
+    conversation.messages.push(newMessage._id);
+    await conversation.save();
 
     res.status(201).json(newMessage);
   } catch (error) {
