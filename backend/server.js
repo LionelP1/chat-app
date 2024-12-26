@@ -19,7 +19,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/messages", messageRoutes);
 app.use("/api/users", userRoutes);
 
-server.listen(PORT, ()=> {
+app.listen(PORT, ()=> {
   connectToMongoDB();
   console.log(`Server running on port ${PORT}`);
 
