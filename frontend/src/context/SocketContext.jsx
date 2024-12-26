@@ -2,36 +2,37 @@ import { createContext, useState, useEffect, useContext } from "react";
 import { useAuthContext } from "./AuthContext";
 import { io } from "socket.io-client";
 
-// const SocketContext = createContext();
+const SocketContext = createContext();
 
-// export const SocketContextProvider = ({ children }) => {
-//   const [socket, setSocket] = useState(null);
-// 	const { authUser } = useAuthContext();
+export const SocketContextProvider = ({ children }) => {
+  const [socket, setSocket] = useState(null);
+	const { authUser } = useAuthContext();
 
-// 	useEffect(() => {
-// 		if (authUser) {
-// 			const socket = io("http://localhost:3000/", {
-// 				query: {
-// 					userId: authUser._id,
-// 				},
-// 			});
+  useEffect(() => {
+    if (authUser) {
+      const socketConnection = io("http://localhost:5000", {
+        query: {
+          userId: authUser._id,
+        },
+      });
 
-// 			setSocket(socket);
+      socketConnection.emit("register", authUser._id);
+      setSocket(socketConnection);
 
-// 			return () => socket.close();
-// 		} else {
-// 			if (socket) {
-// 				socket.close();
-// 				setSocket(null);
-// 			}
-// 		}
-// 	}, [authUser]);
+      return () => socketConnection.close();
+    } else {
+      if (socket) {
+        socket.close();
+        setSocket(null);
+      }
+    }
+  }, [authUser]);
 
-//   return (
-//     <SocketContext.Provider value={socket }>
-//       {children}
-//     </SocketContext.Provider>
-//   );
-// };
+  return (
+    <SocketContext.Provider value={socket}>
+      {children}
+    </SocketContext.Provider>
+  );
+};
 
-// export const useSocket = () => useContext(SocketContext);
+export const useSocket = () => useContext(SocketContext);

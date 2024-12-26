@@ -21,6 +21,11 @@ export const getReceiverSocketId = (receiverId) => {
 io.on("connection", (socket) => {
 	console.log("a user connected", socket.id);
 
+  socket.on("register", (userId) => {
+    userSocketMap[userId] = socket.id;
+    console.log(`User ${userId} connected with socket ID: ${socket.id}`);
+  });
+
   socket.on("disconnect", () => {
     for (const userId in userSocketMap) {
       if (userSocketMap[userId] === socket.id) {
