@@ -12,12 +12,24 @@ const io = new Server(server, {
 	},
 });
 
+const userSocketMap = {};
+
+export const getReceiverSocketId = (receiverId) => {
+	return userSocketMap[receiverId];
+};
+
 io.on("connection", (socket) => {
 	console.log("a user connected", socket.id);
 
-	socket.on("disconnect", () => {
-		console.log("user disconnected", socket.id);
-	});
+  socket.on("disconnect", () => {
+    for (const userId in userSocketMap) {
+      if (userSocketMap[userId] === socket.id) {
+        delete userSocketMap[userId];
+        console.log(`User ${userId} disconnected`);
+        break;
+      }
+    }
+  });
 });
 
 export { app, io, server };
