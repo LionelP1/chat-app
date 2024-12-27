@@ -2,20 +2,25 @@ import Conversation from '../models/conversation.model.js';
 import Message from '../models/message.model.js';
 import { getReceiverSocketId, io } from "../socket/socket.js";
 
+
 export const sendMessage = async (req, res) => {
   try {
     const { message } = req.body;
     const { id: receiverId } = req.params;
     const senderId = req.user._id;
 
+    if (!message || message.trim() === "") {
+      return res.status(400).json({ error: "Message cannot be empty" });
+    }
+
     let conversation = await Conversation.findOne({
       participants: { $all: [senderId, receiverId] },
     });
 
-    if(!conversation) {
+    if (!conversation) {
       conversation = await Conversation.create({
         participants: [senderId, receiverId],
-      })
+      });
     }
 
     const newMessage = new Message({
@@ -24,20 +29,23 @@ export const sendMessage = async (req, res) => {
       message,
     });
 
-    await newMessage.save();
-    conversation.messages.push(newMessage._id);
+    const savedMessage = await newMessage.save();
+
+    // Update conversation
+    conversation.messages.push(savedMessage._id);
     await conversation.save();
 
+    const populatedMessage = await Message.findById(savedMessage._id).lean();
     const receiverSocketId = getReceiverSocketId(receiverId);
-		if (receiverSocketId) {
-			io.to(receiverSocketId).emit("newMessage", newMessage);
-		}
 
-    res.status(201).json(newMessage);
+    if (receiverSocketId) {
+      io.to(receiverSocketId).emit("newMessage", populatedMessage);
+    }
+
+    res.status(201).json(populatedMessage);
   } catch (error) {
-    console.log("Error in sendMessage controller: ", error.message);
-    res.status(500).json({ error: "Internal server error"});
-    
+    console.error("Error in sendMessage controller:", error.message);
+    res.status(500).json({ error: "Internal server error" });
   }
 };
 
@@ -58,7 +66,6 @@ export const getMessages = async (req, res) => {
  
     res.status(200).json(messages);
   } catch (error) {
-    console.log("Error in getMessage controller: ", error.message);
     res.status(500).json({ error: "Internal server error"});
   }
 };

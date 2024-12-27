@@ -23,7 +23,6 @@ io.on("connection", (socket) => {
 
   socket.on("register", (userId) => {
     userSocketMap[userId] = socket.id;
-    console.log(`User ${userId} connected with socket ID: ${socket.id}`);
   });
 
   socket.on("disconnect", () => {

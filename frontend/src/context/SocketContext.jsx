@@ -8,8 +8,6 @@ export const SocketContextProvider = ({ children }) => {
   const [socket, setSocket] = useState(null);
 	const { authUser } = useAuthContext();
 
-
-
   useEffect(() => {
     if (authUser) {
       console.log("Initializing socket connection...");
