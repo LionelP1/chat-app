@@ -5,6 +5,7 @@ ChatApp is a real-time messaging platform built with Node.js, Express, and Socke
 
 ## Live Demo
 [ChatApp Live Demo](https://chat-app-xz4i.onrender.com)
+*Note: The project will take 1-minute to load*
 
 ## Features
 - **User Authentication:**
